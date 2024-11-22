@@ -4,9 +4,9 @@ pragma solidity ^0.6.12;
 interface IRentrance {
     function donate(address _to) external payable;
 
-    function balanceOf(address _who) external view returns (uint balance);
+    function balanceOf(address _who) external view returns (uint256 balance);
 
-    function withdraw(uint _amount) external;
+    function withdraw(uint256 _amount) external;
 
     receive() external payable;
 }

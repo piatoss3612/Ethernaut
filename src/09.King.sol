@@ -3,7 +3,7 @@ pragma solidity ^0.8.0;
 
 contract King {
     address king;
-    uint public prize;
+    uint256 public prize;
     address public owner;
 
     constructor() payable {
@@ -34,7 +34,7 @@ contract ForeverKing {
     function usurpTheThrone() public payable {
         King instance = King(king);
         require(msg.value >= instance.prize());
-        (bool ok, ) = king.call{value: msg.value}("");
+        (bool ok,) = king.call{value: msg.value}("");
         require(ok);
     }
 }

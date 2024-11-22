@@ -21,15 +21,9 @@ contract MagicAnimalCarousel {
         uint256 encodedAnimal = encodeAnimalName(animal) >> 16;
         uint256 nextCrateId = (carousel[currentCrateId] & NEXT_ID_MASK) >> 160;
 
-        require(
-            encodedAnimal <= uint256(type(uint80).max),
-            AnimalNameTooLong()
-        );
-        carousel[nextCrateId] =
-            ((carousel[nextCrateId] & ~NEXT_ID_MASK) ^
-                (encodedAnimal << (160 + 16))) |
-            (((nextCrateId + 1) % MAX_CAPACITY) << 160) |
-            uint160(msg.sender);
+        require(encodedAnimal <= uint256(type(uint80).max), AnimalNameTooLong());
+        carousel[nextCrateId] = ((carousel[nextCrateId] & ~NEXT_ID_MASK) ^ (encodedAnimal << (160 + 16)))
+            | (((nextCrateId + 1) % MAX_CAPACITY) << 160) | uint160(msg.sender);
 
         currentCrateId = nextCrateId;
     }
@@ -42,20 +36,14 @@ contract MagicAnimalCarousel {
         uint256 encodedAnimal = encodeAnimalName(animal);
         if (encodedAnimal != 0) {
             // Replace animal
-            carousel[crateId] =
-                (encodedAnimal << 160) |
-                (carousel[crateId] & NEXT_ID_MASK) |
-                uint160(msg.sender);
+            carousel[crateId] = (encodedAnimal << 160) | (carousel[crateId] & NEXT_ID_MASK) | uint160(msg.sender);
         } else {
             // If no animal specified keep same animal but clear owner slot
-            carousel[crateId] = (carousel[crateId] &
-                (ANIMAL_MASK | NEXT_ID_MASK));
+            carousel[crateId] = (carousel[crateId] & (ANIMAL_MASK | NEXT_ID_MASK));
         }
     }
 
-    function encodeAnimalName(
-        string calldata animalName
-    ) public pure returns (uint256) {
+    function encodeAnimalName(string calldata animalName) public pure returns (uint256) {
         require(bytes(animalName).length <= 12, AnimalNameTooLong());
         return uint256(bytes32(abi.encodePacked(animalName)) >> 160);
     }

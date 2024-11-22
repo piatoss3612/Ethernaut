@@ -10,7 +10,7 @@ contract Recovery {
 
 contract SimpleToken {
     string public name;
-    mapping(address => uint) public balances;
+    mapping(address => uint256) public balances;
 
     // constructor
     constructor(string memory _name, address _creator, uint256 _initialSupply) {
@@ -24,7 +24,7 @@ contract SimpleToken {
     }
 
     // allow transfers of tokens
-    function transfer(address _to, uint _amount) public {
+    function transfer(address _to, uint256 _amount) public {
         require(balances[msg.sender] >= _amount);
         balances[msg.sender] = balances[msg.sender] - _amount;
         balances[_to] = _amount;
@@ -38,9 +38,7 @@ contract SimpleToken {
 
 contract Withdrawal {
     function withdraw(address token) external {
-        (bool ok, ) = token.call(
-            abi.encodeWithSelector(SimpleToken.destroy.selector, msg.sender)
-        );
+        (bool ok,) = token.call(abi.encodeWithSelector(SimpleToken.destroy.selector, msg.sender));
         if (!ok) {
             revert();
         }
@@ -49,20 +47,6 @@ contract Withdrawal {
 
 contract RecoverAddress {
     function recover(address creator) external pure returns (address) {
-        return
-            address(
-                uint160(
-                    uint256(
-                        keccak256(
-                            abi.encodePacked(
-                                bytes1(0xd6),
-                                bytes1(0x94),
-                                creator,
-                                bytes1(0x01)
-                            )
-                        )
-                    )
-                )
-            );
+        return address(uint160(uint256(keccak256(abi.encodePacked(bytes1(0xd6), bytes1(0x94), creator, bytes1(0x01))))));
     }
 }

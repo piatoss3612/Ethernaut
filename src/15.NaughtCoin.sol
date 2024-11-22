@@ -7,7 +7,7 @@ contract NaughtCoin is ERC20 {
     // string public constant name = 'NaughtCoin';
     // string public constant symbol = '0x0';
     // uint public constant decimals = 18;
-    uint public timeLock = block.timestamp + 10 * 365 days;
+    uint256 public timeLock = block.timestamp + 10 * 365 days;
     uint256 public INITIAL_SUPPLY;
     address public player;
 
@@ -20,10 +20,7 @@ contract NaughtCoin is ERC20 {
         emit Transfer(address(0), player, INITIAL_SUPPLY);
     }
 
-    function transfer(
-        address _to,
-        uint256 _value
-    ) public override lockTokens returns (bool) {
+    function transfer(address _to, uint256 _value) public override lockTokens returns (bool) {
         super.transfer(_to, _value);
     }
 
@@ -47,7 +44,7 @@ contract Withdrawal {
 
     function withdraw() public returns (bool) {
         NaughtCoin instance = NaughtCoin(coin);
-        uint amount = instance.allowance(msg.sender, address(this));
+        uint256 amount = instance.allowance(msg.sender, address(this));
         return instance.transferFrom(msg.sender, address(this), amount);
     }
 }

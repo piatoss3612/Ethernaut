@@ -2,11 +2,11 @@
 pragma solidity ^0.8.0;
 
 interface Buyer {
-    function price() external view returns (uint);
+    function price() external view returns (uint256);
 }
 
 contract Shop {
-    uint public price = 100;
+    uint256 public price = 100;
     bool public isSold;
 
     function buy() public {
@@ -30,7 +30,7 @@ contract FakeBuyer is Buyer {
         shop.buy();
     }
 
-    function price() external view returns (uint) {
+    function price() external view returns (uint256) {
         return shop.isSold() ? 0 : 100;
     }
 }

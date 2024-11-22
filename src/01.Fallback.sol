@@ -2,7 +2,7 @@
 pragma solidity ^0.8.0;
 
 contract Fallback {
-    mapping(address => uint) public contributions;
+    mapping(address => uint256) public contributions;
     address public owner;
 
     constructor() {
@@ -23,7 +23,7 @@ contract Fallback {
         }
     }
 
-    function getContribution() public view returns (uint) {
+    function getContribution() public view returns (uint256) {
         return contributions[msg.sender];
     }
 

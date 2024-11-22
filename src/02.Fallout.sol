@@ -2,7 +2,7 @@
 pragma solidity ^0.8.0;
 
 contract Fallout {
-    mapping(address => uint) allocations;
+    mapping(address => uint256) allocations;
     address payable public owner;
 
     /* constructor */
@@ -29,7 +29,7 @@ contract Fallout {
         payable(msg.sender).transfer(address(this).balance);
     }
 
-    function allocatorBalance(address allocator) public view returns (uint) {
+    function allocatorBalance(address allocator) public view returns (uint256) {
         return allocations[allocator];
     }
 }

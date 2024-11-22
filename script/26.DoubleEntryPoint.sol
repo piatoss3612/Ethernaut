@@ -2,7 +2,7 @@
 pragma solidity ^0.8.13;
 
 import {Script, console} from "forge-std/Script.sol";
-import  "../src/26.DoubleEntryPoint.sol";
+import "../src/26.DoubleEntryPoint.sol";
 
 contract DoubleEntryPointScript is Script {
     function setUp() public {}
@@ -23,4 +23,3 @@ contract DoubleEntryPointScript is Script {
         vm.stopBroadcast();
     }
 }
-

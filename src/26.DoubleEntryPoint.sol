@@ -5,7 +5,7 @@ import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 
 interface DelegateERC20 {
-  function delegateTransfer(address to, uint256 value, address origSender) external returns (bool);
+    function delegateTransfer(address to, uint256 value, address origSender) external returns (bool);
 }
 
 interface IDetectionBot {
@@ -19,24 +19,24 @@ interface IForta {
 }
 
 contract Forta is IForta {
-  mapping(address => IDetectionBot) public usersDetectionBots;
-  mapping(address => uint256) public botRaisedAlerts;
+    mapping(address => IDetectionBot) public usersDetectionBots;
+    mapping(address => uint256) public botRaisedAlerts;
 
-  function setDetectionBot(address detectionBotAddress) external override {
-      usersDetectionBots[msg.sender] = IDetectionBot(detectionBotAddress);
-  }
+    function setDetectionBot(address detectionBotAddress) external override {
+        usersDetectionBots[msg.sender] = IDetectionBot(detectionBotAddress);
+    }
 
-  function notify(address user, bytes calldata msgData) external override {
-    if(address(usersDetectionBots[user]) == address(0)) return;
-    try usersDetectionBots[user].handleTransaction(user, msgData) {
-        return;
-    } catch {}
-  }
+    function notify(address user, bytes calldata msgData) external override {
+        if (address(usersDetectionBots[user]) == address(0)) return;
+        try usersDetectionBots[user].handleTransaction(user, msgData) {
+            return;
+        } catch {}
+    }
 
-  function raiseAlert(address user) external override {
-      if(address(usersDetectionBots[user]) != msg.sender) return;
-      botRaisedAlerts[msg.sender] += 1;
-  } 
+    function raiseAlert(address user) external override {
+        if (address(usersDetectionBots[user]) != msg.sender) return;
+        botRaisedAlerts[msg.sender] += 1;
+    }
 }
 
 contract CryptoVault {
@@ -65,9 +65,7 @@ contract CryptoVault {
 contract LegacyToken is ERC20, Ownable {
     DelegateERC20 public delegate;
 
-    constructor() ERC20("LegacyToken", "LGT") Ownable(msg.sender) {
-
-    }
+    constructor() ERC20("LegacyToken", "LGT") Ownable(msg.sender) {}
 
     function mint(address to, uint256 amount) public onlyOwner {
         _mint(to, amount);
@@ -92,7 +90,10 @@ contract DoubleEntryPoint is ERC20, DelegateERC20, Ownable {
     address public delegatedFrom;
     Forta public forta;
 
-    constructor(address legacyToken, address vaultAddress, address fortaAddress, address playerAddress) ERC20("DoubleEntryPointToken", "DET") Ownable(msg.sender) {
+    constructor(address legacyToken, address vaultAddress, address fortaAddress, address playerAddress)
+        ERC20("DoubleEntryPointToken", "DET")
+        Ownable(msg.sender)
+    {
         delegatedFrom = legacyToken;
         forta = Forta(fortaAddress);
         player = playerAddress;
@@ -118,14 +119,16 @@ contract DoubleEntryPoint is ERC20, DelegateERC20, Ownable {
         _;
 
         // Check if alarms have been raised
-        if(forta.botRaisedAlerts(detectionBot) > previousValue) revert("Alert has been triggered, reverting");
+        if (forta.botRaisedAlerts(detectionBot) > previousValue) revert("Alert has been triggered, reverting");
     }
 
-    function delegateTransfer(
-        address to,
-        uint256 value,
-        address origSender
-    ) public override onlyDelegateFrom fortaNotify returns (bool) {
+    function delegateTransfer(address to, uint256 value, address origSender)
+        public
+        override
+        onlyDelegateFrom
+        fortaNotify
+        returns (bool)
+    {
         _transfer(origSender, to, value);
         return true;
     }

@@ -22,14 +22,14 @@ contract PuzzleWallet {
         owner = msg.sender;
     }
 
-    modifier onlyWhitelisted {
+    modifier onlyWhitelisted() {
         require(whitelisted[msg.sender], "Not whitelisted");
         _;
     }
 
     function setMaxBalance(uint256 _maxBalance) external onlyWhitelisted {
-      require(address(this).balance == 0, "Contract balance is not 0");
-      maxBalance = _maxBalance;
+        require(address(this).balance == 0, "Contract balance is not 0");
+        maxBalance = _maxBalance;
     }
 
     function addToWhitelist(address addr) external {
@@ -38,14 +38,14 @@ contract PuzzleWallet {
     }
 
     function deposit() external payable onlyWhitelisted {
-      require(address(this).balance <= maxBalance, "Max balance reached");
-      balances[msg.sender] += msg.value;
+        require(address(this).balance <= maxBalance, "Max balance reached");
+        balances[msg.sender] += msg.value;
     }
 
     function execute(address to, uint256 value, bytes calldata data) external payable onlyWhitelisted {
         require(balances[msg.sender] >= value, "Insufficient balance");
         balances[msg.sender] -= value;
-        (bool success, ) = to.call{ value: value }(data);
+        (bool success,) = to.call{value: value}(data);
         require(success, "Execution failed");
     }
 
@@ -62,7 +62,7 @@ contract PuzzleWallet {
                 // Protect against reusing msg.value
                 depositCalled = true;
             }
-            (bool success, ) = address(this).delegatecall(data[i]);
+            (bool success,) = address(this).delegatecall(data[i]);
             require(success, "Error while delegating call");
         }
     }

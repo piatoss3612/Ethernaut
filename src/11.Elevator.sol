@@ -2,14 +2,14 @@
 pragma solidity ^0.8.0;
 
 interface Building {
-    function isLastFloor(uint) external returns (bool);
+    function isLastFloor(uint256) external returns (bool);
 }
 
 contract Elevator {
     bool public top;
-    uint public floor;
+    uint256 public floor;
 
-    function goTo(uint _floor) public {
+    function goTo(uint256 _floor) public {
         Building building = Building(msg.sender);
 
         if (!building.isLastFloor(_floor)) {
@@ -32,7 +32,7 @@ contract FakeBuilding is Building {
         instance.goTo(10000000000000000000000);
     }
 
-    function isLastFloor(uint) external returns (bool) {
+    function isLastFloor(uint256) external returns (bool) {
         floor += 1;
         return floor != 1;
     }

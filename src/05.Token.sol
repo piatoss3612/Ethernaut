@@ -2,21 +2,21 @@
 pragma solidity ^0.6.0;
 
 contract Token {
-    mapping(address => uint) balances;
-    uint public totalSupply;
+    mapping(address => uint256) balances;
+    uint256 public totalSupply;
 
-    constructor(uint _initialSupply) public {
+    constructor(uint256 _initialSupply) public {
         balances[msg.sender] = totalSupply = _initialSupply;
     }
 
-    function transfer(address _to, uint _value) public returns (bool) {
+    function transfer(address _to, uint256 _value) public returns (bool) {
         require(balances[msg.sender] - _value >= 0);
         balances[msg.sender] -= _value;
         balances[_to] += _value;
         return true;
     }
 
-    function balanceOf(address _owner) public view returns (uint balance) {
+    function balanceOf(address _owner) public view returns (uint256 balance) {
         return balances[_owner];
     }
 }
@@ -28,7 +28,7 @@ contract Attack {
         token = _token;
     }
 
-    function attack(address _to, uint _value) public returns (bool) {
+    function attack(address _to, uint256 _value) public returns (bool) {
         Token tokenContract = Token(token);
 
         return tokenContract.transfer(_to, _value);

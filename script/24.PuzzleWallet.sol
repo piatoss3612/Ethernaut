@@ -2,7 +2,7 @@
 pragma solidity ^0.8.13;
 
 import {Script, console} from "forge-std/Script.sol";
-import  "../src/24.PuzzleWallet.sol";
+import "../src/24.PuzzleWallet.sol";
 
 contract PuzzleWalletScript is Script {
     function setUp() public {}
@@ -13,7 +13,7 @@ contract PuzzleWalletScript is Script {
         vm.startBroadcast(privateKey);
 
         address puzzleProxyAddress = 0x86dF37FbBaD53E4EC2Af680495a42536F70CBE7C;
-        
+
         // PuzzleProxy contract
         IPuzzleProxy puzzleProxy = IPuzzleProxy(puzzleProxyAddress);
 
@@ -64,8 +64,9 @@ contract PuzzleWalletScript is Script {
 
         // deposit and execute data
         bytes memory depositData = abi.encodeWithSelector(puzzleProxyWallet.deposit.selector);
-        bytes memory executeData = abi.encodeWithSelector(puzzleProxyWallet.execute.selector, player, puzzleProxyBalance * 2, "");
-        
+        bytes memory executeData =
+            abi.encodeWithSelector(puzzleProxyWallet.execute.selector, player, puzzleProxyBalance * 2, "");
+
         // nested multicall data
         bytes[] memory multicallData = new bytes[](1);
         multicallData[0] = depositData;
@@ -74,7 +75,7 @@ contract PuzzleWalletScript is Script {
         bytes[] memory data = new bytes[](3);
         data[0] = abi.encodeWithSelector(puzzleProxyWallet.multicall.selector, multicallData);
         data[1] = depositData;
-        data[2] = executeData;        
+        data[2] = executeData;
 
         // multicall with puzzleProxyBalance
         puzzleProxyWallet.multicall{value: puzzleProxyBalance}(data);
@@ -91,4 +92,3 @@ contract PuzzleWalletScript is Script {
         vm.stopBroadcast();
     }
 }
-
