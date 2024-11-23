@@ -8,7 +8,12 @@ contract Impersonator is Ownable {
     uint256 public lockCounter;
     ECLocker[] public lockers;
 
-    event NewLock(address indexed lockAddress, uint256 lockId, uint256 timestamp, bytes signature);
+    event NewLock(
+        address indexed lockAddress,
+        uint256 lockId,
+        uint256 timestamp,
+        bytes signature
+    );
 
     constructor(uint256 _lockCounter) {
         lockCounter = _lockCounter;
@@ -28,7 +33,10 @@ contract ECLocker {
     address public controller;
     mapping(bytes32 => bool) public usedSignatures;
 
-    event LockInitializated(address indexed initialController, uint256 timestamp);
+    event LockInitializated(
+        address indexed initialController,
+        uint256 timestamp
+    );
     event Open(address indexed opener, uint256 timestamp);
     event ControllerChanged(address indexed newController, uint256 timestamp);
 
@@ -104,17 +112,28 @@ contract ECLocker {
     /// @param r the r value of the signature
     /// @param s the s value of the signature
     /// @param newController the new controller address
-    function changeController(uint8 v, bytes32 r, bytes32 s, address newController) external {
+    function changeController(
+        uint8 v,
+        bytes32 r,
+        bytes32 s,
+        address newController
+    ) external {
         _isValidSignature(v, r, s);
         controller = newController;
         emit ControllerChanged(newController, block.timestamp);
     }
 
-    function _isValidSignature(uint8 v, bytes32 r, bytes32 s) internal returns (address) {
+    function _isValidSignature(
+        uint8 v,
+        bytes32 r,
+        bytes32 s
+    ) internal returns (address) {
         address _address = ecrecover(msgHash, v, r, s);
         require(_address == controller, InvalidController());
 
-        bytes32 signatureHash = keccak256(abi.encode([uint256(r), uint256(s), uint256(v)]));
+        bytes32 signatureHash = keccak256(
+            abi.encode([uint256(r), uint256(s), uint256(v)])
+        );
         require(!usedSignatures[signatureHash], SignatureAlreadyUsed());
 
         usedSignatures[signatureHash] = true;

@@ -12,6 +12,12 @@ $ forge install
 $ forge compile
 ```
 
+## Run Scripts
+
+```bash
+$ forge script <SCRIPT> --account <YOUR_ACCOUNT> --sender <YOUR_ACCOUNT_ADDRESS> --rpc-url sepolia
+```
+
 ## Contents
 
 | Contract             | Level | Solution                            |
@@ -47,3 +53,4 @@ $ forge compile
 | 29. Switch           | ★★★★☆ | https://piatoss3612.tistory.com/127 |
 | 30. HigherOrder      | ★★★★☆ | https://piatoss3612.tistory.com/175 |
 | 31. Stake            | ★★★☆☆ | https://piatoss3612.tistory.com/169 |
+| 32. Impersonator     | ★★★★☆ | https://piatoss3612.tistory.com/195 |
