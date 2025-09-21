@@ -5,8 +5,7 @@ import {Script, console} from "forge-std/Script.sol";
 import {Impersonator, ECLocker} from "src/32.Impersonator.sol";
 
 contract ImpersonatorScript is Script {
-    bytes32 N =
-        0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFEBAAEDCE6AF48A03BBFD25E8CD0364141;
+    bytes32 N = 0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFEBAAEDCE6AF48A03BBFD25E8CD0364141;
 
     function setUp() public {}
 
