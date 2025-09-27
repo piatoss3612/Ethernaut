@@ -10,7 +10,7 @@ contract BetHouse2Script is Script {
     function run() public {
         vm.startBroadcast();
 
-        address instanceAddr = 0xc843987C5b31cdc695Ecc88776da30213775D37a;
+        address instanceAddr = 0xc8DcdaE30Def764e5eC9E3d86E2258aba4941B93;
         address playerAddr = msg.sender;
 
         BetHouse betHouse = BetHouse(instanceAddr);
@@ -29,5 +29,3 @@ contract BetHouse2Script is Script {
         vm.stopBroadcast();
     }
 }
-
-// forge script script/34.BetHouse2.s.sol --account dev --sender 0x965B0E63e00E7805569ee3B428Cf96330DFc57EF --rpc-url sepolia --slow --broadcast
