@@ -12,13 +12,15 @@ contract EllipticCoinScript is Script {
         vm.startBroadcast();
 
         address playerAddr = msg.sender;
-        address instanceAddr = 0x1Eb7beBf084Df8d3961C9647A4fF1E697d4E91D5;
+        address instanceAddr = 0x7255b532427cB72259B0BE3edc932ab4A49b0853;
         address aliceAddr = 0xA11CE84AcB91Ac59B0A4E2945C9157eF3Ab17D4e;
 
         EllipticToken ellipticToken = EllipticToken(instanceAddr);
 
         uint256 aliceBalance = ellipticToken.balanceOf(aliceAddr);
-        console.log("Alice Balance:", aliceBalance);
+        uint256 decimals = ellipticToken.decimals();
+
+        console.log("Alice Balance:", aliceBalance / (10 ** decimals));
 
         // amount를 alice가 사용한 voucherHash로 사용해야 함
         // 그래야 permit에서 이전에 사용한 voucherHash랑 충돌이 나지 않으면서 receiverSignature를
@@ -41,22 +43,43 @@ contract EllipticCoinScript is Script {
         // 역시나
 
         bytes32 salt = keccak256("BOB and ALICE are part of the secret sauce");
-        bytes32 voucherHash = keccak256(abi.encodePacked(aliceBalance, aliceAddr, salt));
+        bytes32 voucherHash = keccak256(
+            abi.encodePacked(aliceBalance, aliceAddr, salt)
+        );
+
+        bool isUsed = ellipticToken.usedHashes(voucherHash);
+        console.log("Is Used:", isUsed);
 
         uint256 amount = uint256(voucherHash);
-        bytes memory tokenOwnerSignature =
-            hex"ab1dcd2a2a1c697715a62eb6522b7999d04aa952ffa2619988737ee675d9494f2b50ecce40040bcb29b5a8ca1da875968085f22b7c0a50f29a4851396251de121c";
 
-        bytes32 permitHash = keccak256(abi.encodePacked(aliceAddr, playerAddr, amount));
+        bytes
+            memory tokenOwnerSignature = hex"ab1dcd2a2a1c697715a62eb6522b7999d04aa952ffa2619988737ee675d9494f2b50ecce40040bcb29b5a8ca1da875968085f22b7c0a50f29a4851396251de121c";
+
+        bytes32 permitHash = keccak256(
+            abi.encodePacked(aliceAddr, playerAddr, amount)
+        );
 
         (uint8 v, bytes32 r, bytes32 s) = vm.sign(playerAddr, permitHash); // sign the permit hash with spender
 
         bytes memory spenderSignature = abi.encodePacked(r, s, v);
 
-        address spender = ECDSA.recover(permitHash, spenderSignature);
-        console.log("Spender:", spender);
+        console.log("Amount:", amount);
 
-        ellipticToken.permit(amount, spender, tokenOwnerSignature, spenderSignature);
+        // CHECK: 이 문제 뭔가 잘못됨. 지금 해시 재사용을 하고 있는데 permit 실행이 revert되지 않음
+        // https://github.com/jack695/ethernaut/blob/4999759efe1c883dc742e1e53bbad5b069da2062/contracts/src/levels/EllipticToken.sol
+        // 아무래도 이 링크의 컨트랙트 코드가 사용되고 있는 것으로 보임.
+
+        // require(
+        //     !ellipticToken.usedHashes(bytes32(amount)),
+        //     "Amount already used"
+        // );
+
+        ellipticToken.permit(
+            amount,
+            playerAddr,
+            tokenOwnerSignature,
+            spenderSignature
+        );
         ellipticToken.transferFrom(aliceAddr, playerAddr, aliceBalance);
 
         uint256 playerBalance = ellipticToken.balanceOf(playerAddr);

@@ -1,0 +1,33 @@
+{
+  "name": "ethernaut",
+  "version": "1.0.0",
+  "description": "```bash $ forge install ```",
+  "main": "index.js",
+  "directories": {
+    "lib": "lib",
+    "test": "test"
+  },
+  "scripts": {
+    "signature-spoofing": "node script/signature_spoofing.ts"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/piatoss3612/Ethernaut.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "module",
+  "bugs": {
+    "url": "https://github.com/piatoss3612/Ethernaut/issues"
+  },
+  "homepage": "https://github.com/piatoss3612/Ethernaut#readme",
+  "dependencies": {
+    "@noble/curves": "^2.0.1",
+    "viem": "^2.37.9"
+  },
+  "devDependencies": {
+    "@types/node": "^24.5.2",
+    "typescript": "^5.9.2"
+  }
+}
