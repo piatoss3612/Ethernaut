@@ -43,21 +43,17 @@ contract EllipticCoinScript is Script {
         // 역시나
 
         bytes32 salt = keccak256("BOB and ALICE are part of the secret sauce");
-        bytes32 voucherHash = keccak256(
-            abi.encodePacked(aliceBalance, aliceAddr, salt)
-        );
+        bytes32 voucherHash = keccak256(abi.encodePacked(aliceBalance, aliceAddr, salt));
 
         bool isUsed = ellipticToken.usedHashes(voucherHash);
         console.log("Is Used:", isUsed);
 
         uint256 amount = uint256(voucherHash);
 
-        bytes
-            memory tokenOwnerSignature = hex"ab1dcd2a2a1c697715a62eb6522b7999d04aa952ffa2619988737ee675d9494f2b50ecce40040bcb29b5a8ca1da875968085f22b7c0a50f29a4851396251de121c";
+        bytes memory tokenOwnerSignature =
+            hex"ab1dcd2a2a1c697715a62eb6522b7999d04aa952ffa2619988737ee675d9494f2b50ecce40040bcb29b5a8ca1da875968085f22b7c0a50f29a4851396251de121c";
 
-        bytes32 permitHash = keccak256(
-            abi.encodePacked(aliceAddr, playerAddr, amount)
-        );
+        bytes32 permitHash = keccak256(abi.encodePacked(aliceAddr, playerAddr, amount));
 
         (uint8 v, bytes32 r, bytes32 s) = vm.sign(playerAddr, permitHash); // sign the permit hash with spender
 
@@ -74,12 +70,7 @@ contract EllipticCoinScript is Script {
         //     "Amount already used"
         // );
 
-        ellipticToken.permit(
-            amount,
-            playerAddr,
-            tokenOwnerSignature,
-            spenderSignature
-        );
+        ellipticToken.permit(amount, playerAddr, tokenOwnerSignature, spenderSignature);
         ellipticToken.transferFrom(aliceAddr, playerAddr, aliceBalance);
 
         uint256 playerBalance = ellipticToken.balanceOf(playerAddr);

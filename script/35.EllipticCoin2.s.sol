@@ -22,27 +22,18 @@ contract EllipticCoinScript is Script {
 
         console.log("Alice Balance:", aliceBalance / (10 ** decimals));
 
-        uint256 amount = uint256(
-            0xd1bc88e43bfd26e57f5585849f856be28ab6e33b918f38c4d44589c4da2c6f3e
-        );
+        uint256 amount = uint256(0xd1bc88e43bfd26e57f5585849f856be28ab6e33b918f38c4d44589c4da2c6f3e);
 
-        bytes
-            memory tokenOwnerSignature = hex"db4e49f74fa7ad845725786bdc8e7c4007739f728c82bb20bcf3fe60097eb14859ce37062271a2156650a0370646e6468ea916b5744c2ada4f5d7ad75638d0eb1c";
+        bytes memory tokenOwnerSignature =
+            hex"db4e49f74fa7ad845725786bdc8e7c4007739f728c82bb20bcf3fe60097eb14859ce37062271a2156650a0370646e6468ea916b5744c2ada4f5d7ad75638d0eb1c";
 
-        bytes32 permitHash = keccak256(
-            abi.encodePacked(aliceAddr, playerAddr, amount)
-        );
+        bytes32 permitHash = keccak256(abi.encodePacked(aliceAddr, playerAddr, amount));
 
         (uint8 v, bytes32 r, bytes32 s) = vm.sign(playerAddr, permitHash); // sign the permit hash with spender
 
         bytes memory spenderSignature = abi.encodePacked(r, s, v);
 
-        ellipticToken.permit(
-            amount,
-            playerAddr,
-            tokenOwnerSignature,
-            spenderSignature
-        );
+        ellipticToken.permit(amount, playerAddr, tokenOwnerSignature, spenderSignature);
         ellipticToken.transferFrom(aliceAddr, playerAddr, aliceBalance);
 
         uint256 playerBalance = ellipticToken.balanceOf(playerAddr);
