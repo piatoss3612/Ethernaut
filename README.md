@@ -58,4 +58,4 @@ $ forge script <SCRIPT> --account <YOUR_ACCOUNT> --sender <YOUR_ACCOUNT_ADDRESS>
 | 32. Impersonator          | ★★★★☆ | https://piatoss3612.tistory.com/195 |
 | 33. Magic Animal Carousel | ★★★☆☆ | WIP                                 |
 | 34. Bet House             | ★★☆☆☆ | https://piatoss3612.tistory.com/201 |
-| 35. Elliptic Coin         | ★★★★☆ | WIP                                 |
+| 35. Elliptic Coin         | ★★★★☆ | https://piatoss3612.tistory.com/202 |

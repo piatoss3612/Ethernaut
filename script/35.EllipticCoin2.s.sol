@@ -12,20 +12,17 @@ contract EllipticCoinScript is Script {
         vm.startBroadcast();
 
         address playerAddr = msg.sender;
-        address instanceAddr = 0x7255b532427cB72259B0BE3edc932ab4A49b0853;
+        address instanceAddr = 0x40b415d35838E8f79058726aE4Ea2FcDf4773C10;
         address aliceAddr = 0xA11CE84AcB91Ac59B0A4E2945C9157eF3Ab17D4e;
 
         EllipticToken ellipticToken = EllipticToken(instanceAddr);
 
         uint256 aliceBalance = ellipticToken.balanceOf(aliceAddr);
-        uint256 decimals = ellipticToken.decimals();
 
-        console.log("Alice Balance:", aliceBalance / (10 ** decimals));
-
-        uint256 amount = uint256(0xd1bc88e43bfd26e57f5585849f856be28ab6e33b918f38c4d44589c4da2c6f3e);
+        uint256 amount = uint256(0xebf90284f84cb6e234a8ecf9393afda9c0ede46f4d6df12bd11a4757c42903c0); // message hash
 
         bytes memory tokenOwnerSignature =
-            hex"db4e49f74fa7ad845725786bdc8e7c4007739f728c82bb20bcf3fe60097eb14859ce37062271a2156650a0370646e6468ea916b5744c2ada4f5d7ad75638d0eb1c";
+            hex"0ab5b8262a97582b1971d68211e37be02ac5d16339cb0278edffc0a465d64aac7b06ed5cd7bc5798089feda2fac7b577ef49e1f2f84a6d2392ff26078f2192a01c";
 
         bytes32 permitHash = keccak256(abi.encodePacked(aliceAddr, playerAddr, amount));
 

@@ -81,9 +81,10 @@ async function signatureSpoofing({
       s = N - s;
       yParity ^= 1; // flip parity because we negated s
     }
-
     const v = 27 + yParity; // Ethereum-style v
     const e = mod(r * mod(u1 * u2Inv, N), N); // forged message hash
+
+    if (e < 10 ** 18) continue;
 
     const generatedSignature = serializeSignature({
       r: toHex(r),
