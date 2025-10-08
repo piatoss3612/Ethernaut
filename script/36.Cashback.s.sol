@@ -13,6 +13,17 @@ contract CashbackScript is Script {
         address playerAddr = msg.sender;
         address instanceAddr = 0xc6925e10e9FE434629679b8BD7f5f29efEeA7E3f;
 
+        uint256 pk = vm.envUint("PRIVATE_KEY");
+
+        Vm.SignedDelegation memory delegation = vm.signDelegation(
+            instanceAddr,
+            pk
+        );
+
+        vm.attachDelegation(delegation);
+
+        // TODO: exploit
+
         vm.stopBroadcast();
     }
 }
